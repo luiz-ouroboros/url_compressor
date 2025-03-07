@@ -11,6 +11,7 @@ gem 'bootsnap', require: false
 gem 'kamal', require: false
 gem 'thruster', require: false
 gem 'dotenv-rails'
+gem 'rack-cors'
 
 group :development, :test do
   gem 'pry'
