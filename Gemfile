@@ -14,6 +14,7 @@ gem 'dotenv-rails'
 gem 'rack-cors'
 gem 'u-case'
 gem 'dry-validation'
+gem 'active_model_serializers', '~> 0.10.15'
 
 group :development, :test do
   gem 'pry'
