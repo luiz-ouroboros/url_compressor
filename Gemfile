@@ -12,6 +12,7 @@ gem 'kamal', require: false
 gem 'thruster', require: false
 gem 'dotenv-rails'
 gem 'rack-cors'
+gem 'u-case'
 
 group :development, :test do
   gem 'pry'
