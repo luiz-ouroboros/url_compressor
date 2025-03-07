@@ -13,6 +13,7 @@ gem 'thruster', require: false
 gem 'dotenv-rails'
 gem 'rack-cors'
 gem 'u-case'
+gem 'dry-validation'
 
 group :development, :test do
   gem 'pry'
