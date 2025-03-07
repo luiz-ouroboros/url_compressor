@@ -1,0 +1,2 @@
+class Redirection < ApplicationRecord
+end
