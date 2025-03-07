@@ -26,6 +26,12 @@ group :development, :test do
   gem 'factory_bot_rails'
 end
 
+group :development do
+  gem 'rubocop', require: false
+  gem 'rubocop-rails', require: false
+  gem 'rubocop-performance', require: false
+end
+
 group :test do
   gem 'simplecov', require: false
   gem 'rspec-json_matcher', '~> 0.2.0'

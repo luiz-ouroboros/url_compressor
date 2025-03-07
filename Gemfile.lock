@@ -380,6 +380,9 @@ DEPENDENCIES
   rails (~> 8.0.1)
   rspec-json_matcher (~> 0.2.0)
   rspec-rails (~> 6.0)
+  rubocop
+  rubocop-performance
+  rubocop-rails
   rubocop-rails-omakase
   simplecov
   solid_cable
