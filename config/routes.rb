@@ -1,6 +1,7 @@
 Rails.application.routes.draw do
-  resources :redirections, only: [:create]
   get '/:target_key', to: 'redirections#show'
   delete '/:secret_key', to: 'redirections#destroy'
-  get '/history/:secret_key', to: 'redirections#history'
+  get '/:secret_key/history', to: 'redirections#history'
+
+  resources :redirections, only: %i[create index]
 end
