@@ -17,7 +17,7 @@ ActiveRecord::Schema[8.0].define(version: 2025_03_07_190751) do
   create_table "redirections", force: :cascade do |t|
     t.string "target_key", null: false
     t.string "secret_key", null: false
-    t.string "url_target", null: false
+    t.string "target_url", null: false
     t.datetime "expire_at"
     t.integer "requisition_count", default: 0
     t.datetime "created_at", null: false
@@ -25,22 +25,17 @@ ActiveRecord::Schema[8.0].define(version: 2025_03_07_190751) do
     t.index ["secret_key"], name: "index_redirections_on_secret_key", unique: true
     t.index ["target_key", "expire_at"], name: "index_redirections_on_target_key_and_expire_at"
     t.index ["target_key"], name: "index_redirections_on_target_key", unique: true
-    t.index ["url_target", "expire_at"], name: "index_redirections_on_url_target_and_expire_at"
+    t.index ["target_url", "expire_at"], name: "index_redirections_on_target_url_and_expire_at"
   end
 
   create_table "requisitions", force: :cascade do |t|
     t.bigint "redirection_id"
-    t.string "ip"
-    t.string "device"
-    t.string "os"
-    t.string "browser"
-    t.string "location"
     t.string "action_type"
+    t.string "remote_ip"
+    t.string "user_agent"
     t.jsonb "metadata"
     t.datetime "created_at", null: false
     t.datetime "updated_at", null: false
     t.index ["redirection_id"], name: "index_requisitions_on_redirection_id"
   end
-
-  add_foreign_key "requisitions", "redirections"
 end
