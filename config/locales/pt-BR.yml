@@ -4,3 +4,7 @@ pt:
     datetime: !ruby/regexp '/\A\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}\.\d{3}[+-]\d{2}:\d{2}\z/'
   errors:
     not_found: 'Não encontrado'
+    redirection:
+      self_target_url: 'Não é possível redirecionar para a mesma URL'
+      expire_at_is_passed: 'A data de expiração já passou'
+      target_url_already_exists: 'A URL já existe'
