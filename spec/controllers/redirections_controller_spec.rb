@@ -182,4 +182,27 @@ RSpec.describe RedirectionsController, type: :controller do
       end
     end
   end
+
+  describe 'DELETE #destroy' do
+    context 'successful' do
+      it 'when use valid secret_key' do
+        expect {
+          delete :destroy, params: { secret_key: redirection.secret_key }
+        }.to change(Requisition, :count).by(1)
+
+        expect(response).to have_http_status(:no_content)
+      end
+    end
+
+    context 'failure' do
+      it 'when secret_key is invalid' do
+        pattern = { error: [I18n.t('errors.not_found')] }
+
+        delete :destroy, params: { secret_key: 'invalid' }
+
+        expect(response).to have_http_status(:not_found)
+        expect(response.body).to be_json_as(pattern)
+      end
+    end
+  end
 end

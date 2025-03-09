@@ -11,4 +11,7 @@ class RedirectionsController < ApplicationController
     }
   end
 
+  def destroy
+    process_usecase(::Redirections::Destroy, request: request) { |_result| head :no_content }
+  end
 end
