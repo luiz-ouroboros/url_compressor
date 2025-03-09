@@ -1,52 +1,96 @@
-# Desafios para desenvolvedores SPC Grafeno
+# URL Compressor
 
-Desafios para desenvolvedores da SPC Grafeno.
+Este é um projeto Rails para encurtamento de URLs com histórico de acessos e autenticação para gerenciamento.
 
-Esta é uma etapa importante do processo de formação de equipe e esperamos que você aproveite este momento para podermos conhecer melhor suas habilidades técnicas. Para isso, seguem algumas recomendações:
-- Não copie da internet.
-- Não copie de outro candidato.
-- Dedique tempo suficiente durante a solução do desafio e foque no que é importante para funcionar, pense como um produto que precisa ser entregue para o cliente final.
-- Leia com atenção o desafio proposto antes de iniciar a solução.
+## 📝 Documentação
+![DB Schema](https://github.com/luiz-ouroboros/url_compressor/blob/main/public/db.png)
+Disclaimer: Com o objetivo de demonstração uma bazuca foi usada para acertar uma mosca
 
-## Desafio proposto: Encurtador de URL
-
-Implementar um serviço que permita encurtar URLs a fim de torná-las mais legíveis e fáceis de compartilhar com outras pessoas.
-
-O serviço deve ser capaz de encurtar uma URL longa, desfazer o encurtamento quando a URL curta for acessada e redirecionar para a URL original cadastrada pelo usuário.
-
-Envie também quaisquer documentações da solução, endpoints, arquitetura, que você tenha utilizado durante o desenvolvimento, pois será um plus.
+O start do projeto foi feito usando o GPT e o prompt pode ser verificado [aqui](https://chatgpt.com/share/67cceed6-e6d8-8013-8b27-3c1891d89f52)
+Com o objetivo de demonstrar uma arquitetura exagonal optei por usar a gem [U-Case](https://github.com/serradura/u-case) que me permite estruturar os casos de uso de forma mais simples e descritiva, bem como extrair a logica de negócio facilitando assim a manutenção, escalabilidade e testabilidade do projeto. Para a validação e tipagem optei por usar a gem [dry-validation](https://github.com/dry-rb/dry-validation)
 
 ### Requisitos de negócio
-- No cadastro, receber uma URL longa como parâmetro obrigatório.
-- O encurtamento deve ser composto por no mínimo 5 e no máximo 10 caracteres.
-- Apenas letras e números devem ser utilizados na composição da URL curta.
-- Contar e armazenar a quantidade de acessos da URL curta.
-- Ter histórico de acesso da URL curta com a data de acesso.
-- A URL encurtada poderá ter data de expiração, neste caso, considere receber e validar esse parâmetro opcional.
-- Ao acessar uma URL curta com data de expiração passada, devolver resposta como registro não encontrado.
-- Não é necessário frontend, apenas API.
+- [x] [No cadastro, receber uma URL longa como parâmetro obrigatório.](https://github.com/luiz-ouroboros/url_compressor/blob/312579f2092437e238a57acbbb119b6fef980e30/app/models/redirections/create.rb#L6)
+- [x] [O encurtamento deve ser composto por no mínimo 5 e no máximo 10 caracteres.](https://github.com/luiz-ouroboros/url_compressor/blob/312579f2092437e238a57acbbb119b6fef980e30/app/models/redirection.rb#L5)
+- [x] [Apenas letras e números devem ser utilizados na composição da URL curta.](https://github.com/luiz-ouroboros/url_compressor/blob/312579f2092437e238a57acbbb119b6fef980e30/app/models/redirection.rb#L13)
+- [x] [Contar e armazenar a quantidade de acessos da URL curta.](https://github.com/luiz-ouroboros/url_compressor/blob/312579f2092437e238a57acbbb119b6fef980e30/)
+- [x] [Ter histórico de acesso da URL curta com a data de acesso.](https://github.com/luiz-ouroboros/url_compressor/blob/312579f2092437e238a57acbbb119b6fef980e30/app/controllers/redirections_controller.rb#L27)
+- [x] [A URL encurtada poderá ter data de expiração, neste caso, considere receber e validar esse parâmetro opcional.](https://github.com/luiz-ouroboros/url_compressor/blob/312579f2092437e238a57acbbb119b6fef980e30/app/models/redirections/create.rb#L7)
+- [x] [Ao acessar uma URL curta com data de expiração passada, devolver resposta como registro não encontrado.](https://github.com/luiz-ouroboros/url_compressor/blob/312579f2092437e238a57acbbb119b6fef980e30/app/models/redirections/show.rb#L22)
+- [x] Não é necessário frontend, apenas API.
 
 ### Requisitos técnicos
-- Deve ser uma API em json.
-- Considere a melhor escolha dos verbos HTTP para cada cenário.
-- Não é necessário se preocupar com autenticação, mas se quiser implementar, nos mostre como você faria.
-- Utilize o banco de dados e outras tecnologias de sua escolha para compor a solução proposta.
-- É necessário que a sua solução execute em Docker.
+- [x] Deve ser uma API em json.
+- [x] [Considere a melhor escolha dos verbos HTTP para cada cenário.](https://github.com/luiz-ouroboros/url_compressor/blob/92a1a965f4fdd6af088d918101ccf6e8a9470b56/config/routes.rb#L1)
+- [x] [Não é necessário se preocupar com autenticação, mas se quiser implementar, nos mostre como você faria.](https://github.com/luiz-ouroboros/url_compressor/blob/312579f2092437e238a57acbbb119b6fef980e30/app/controllers/redirections_controller.rb#L2)
+- [x] Utilize o banco de dados e outras tecnologias de sua escolha para compor a solução proposta.
+- [x] [É necessário que a sua solução execute em Docker.](https://github.com/luiz-ouroboros/url_compressor/blob/312579f2092437e238a57acbbb119b6fef980e30/docker-compose.yml)
 
-## Entrega e avaliação do desafio
+## 📥 Clonando o repositório
+```sh
+git clone git@github.com:luiz-ouroboros/url_compressor.git
+cd url_compressor
+```
 
-Faça um fork deste repositório, crie uma branch com a solução proposta e submeta o PR para o upstream, assim poderemos revisar a solução juntos.
+## ⚙️ Configuração
+Edite as variáveis de ambiente no arquivo `.env` se necessário.
 
-Boas práticas de desenvolvimento são importantes e serão analisadas, como: testes, DRY, 12-factor App, etc. Também vamos analisar a organização do código de forma geral.
+## 🚀 Subindo a aplicação
+```sh
+docker compose up -d
+docker compose exec web rails db:create db:migrate
+```
 
-É esperado que sua solução tenha um README com instruções de setup e consigamos executá-la em poucos passos sem complicações.
+## ✅ Verificando se está tudo OK
+```sh
+docker compose exec web rspec
+```
 
-É preferível que você utilize Ruby on Rails, pois faz parte da nossa principal stack de desenvolvimento, mas você também pode resolver com outras linguagens e frameworks das quais se sente mais confortável.
+## 🔥 Experimentando
+### Criando um redirecionamento
+```sh
+curl -X POST -H "Content-Type: application/json" \
+     -d '{"target_url":"https://google.com"}' \
+     http://localhost:3000/redirections > teste.json
+```
 
-Queremos que você mostre a melhor solução que você pode criar.
+### Acessando a URL encurtada
+```sh
+curl -L $(cat teste.json | jq -r .short_url)
+```
 
-Você tem o prazo de 3 dias corridos a partir do recebimento do desafio, e a entrega é considerada com a abertura do PR.
+### Consultando o histórico de requisições
+```sh
+curl http://localhost:3000/$(cat teste.json | jq -r .secret_key)/history
+```
 
-## Dúvidas
+### Listando todos os redirecionamentos (requer autenticação)
+```sh
+curl -H "Authorization: Bearer your_secret_key_here" \
+     http://localhost:3000/redirections
+```
 
-Em caso de dúvidas, entre em contato com: guilherme.pereira@spcgrafeno.com.br ou marcos.cordeiro@spcgrafeno.com.br
+### Excluindo um redirecionamento
+```sh
+curl -X DELETE http://localhost:3000/$(cat teste.json | jq -r .secret_key)
+```
+
+---
+## 🛑 Possíveis erros e correções
+1. **Erro:** `jq: command not found`
+   - **Solução:** Instale o `jq` para processar JSON:
+     ```sh
+     sudo apt install jq  # Ubuntu/Debian
+     brew install jq  # macOS
+     ```
+
+2. **Erro:** `curl: (6) Could not resolve host`
+   - **Solução:** Verifique se o Docker está rodando corretamente e se o servidor Rails está ativo.
+
+3. **Erro:** `Authorization: Bearer your_secret_key_here` não funcionando
+   - **Solução:** Certifique-se de que a `your_secret_key_here` corresponde a uma chave válida no sistema.
+
+4. **Erro:** `docker compose exec web rails db:create db:migrate` falhando
+   - **Solução:** Certifique-se de que o banco de dados está acessível e corretamente configurado no `.env`.
+
+Acertei na mosca?
