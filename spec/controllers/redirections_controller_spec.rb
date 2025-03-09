@@ -244,4 +244,126 @@ RSpec.describe RedirectionsController, type: :controller do
     end
   end
 
+  describe 'GET #index' do
+    let(:valid_headers) { { 'Authorization' => "Bearer #{ENV['MASTER_KEY']}" } }
+
+    before do
+      ENV['MASTER_KEY'] = 'test_master_key'
+      request.headers.merge!(valid_headers)
+    end
+
+    it 'returns success with valid token' do
+      get :index
+
+      expect(response).to have_http_status(:success)
+    end
+
+    it 'returns unauthorized without token' do
+      request.headers['Authorization'] = nil
+
+      get :index
+
+      expect(response).to have_http_status(:unauthorized)
+    end
+
+    it 'returns unauthorized with invalid token' do
+      request.headers['Authorization'] = 'Bearer wrong_token'
+
+      get :index
+
+      expect(response).to have_http_status(:unauthorized)
+    end
+
+    it 'returns a success response' do
+      redirection_pattern[:id] = redirection.id
+      pattern                  = [redirection_pattern]
+
+      get :index
+
+      expect(response).to be_successful
+      expect(response.body).to be_json_as(pattern)
+    end
+
+    context 'when id params is present' do
+      let!(:redirection_unlisted) { create(:redirection) }
+
+      it 'returns only redirections having id' do
+        redirection_pattern[:id] = redirection.id
+        pattern = [redirection_pattern]
+
+        get :index, params: { id: redirection.id }
+
+        expect(response.body).to be_json_as(pattern)
+      end
+    end
+
+    context 'when remote_ip params is present' do
+      let!(:redirection_unlisted) { create(:redirection) }
+
+      it 'returns only redirections having remote_ip' do
+        redirection = create(:redirection)
+        requisition = create(:requisition, redirection: redirection)
+        redirection_pattern[:id] = redirection.id
+        pattern = [redirection_pattern]
+
+        get :index, params: { remote_ip: requisition.remote_ip }
+
+        expect(response.body).to be_json_as(pattern)
+      end
+    end
+
+    context 'when action_type params is present' do
+      let!(:redirection_unlisted) { create(:redirection) }
+
+      it 'returns only redirections having action_type' do
+        redirection = create(:redirection)
+        requisition = create(:requisition, redirection: redirection, action_type: 'show')
+        redirection_pattern[:id] = redirection.id
+        pattern = [redirection_pattern]
+
+        get :index, params: { action_type: requisition.action_type }
+
+        expect(response.body).to be_json_as(pattern)
+      end
+    end
+
+    context 'when search params is present' do
+      let!(:redirection_unlisted) { create(:redirection) }
+
+      it 'returns only redirections having target_url matche' do
+        redirection_pattern[:id] = redirection.id
+        redirection_pattern[:target_url] = redirection.target_url
+        pattern = [redirection_pattern]
+
+        get :index, params: { search: redirection.target_url }
+
+        expect(response.body).to be_json_as(pattern)
+        expect(response).to be_successful
+      end
+
+      it 'returns only redirections having requisitions remote_ip match' do
+        redirection = create(:redirection)
+        requisition = create(:requisition, redirection: redirection)
+        redirection_pattern[:id] = redirection.id
+        pattern = [redirection_pattern]
+
+        get :index, params: { search: requisition.remote_ip }
+
+        expect(response.body).to be_json_as(pattern)
+        expect(response).to be_successful
+      end
+
+      it 'returns only redirections having requisitions user_agent match' do
+        redirection = create(:redirection)
+        requisition = create(:requisition, redirection: redirection)
+        redirection_pattern[:id] = redirection.id
+        pattern = [redirection_pattern]
+
+        get :index, params: { search: requisition.user_agent }
+
+        expect(response.body).to be_json_as(pattern)
+        expect(response).to be_successful
+      end
+    end
+  end
 end

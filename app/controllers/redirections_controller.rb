@@ -1,4 +1,13 @@
 class RedirectionsController < ApplicationController
+  def index
+    token = request.headers['Authorization']&.split(' ')&.last
+    head :unauthorized and return unless token == ENV['MASTER_KEY']
+
+    process_usecase(::Redirections::Get, request: request) { |result|
+      render json: result[:redirections], status: :ok
+    }
+  end
+
   def create
     process_usecase(::Redirections::Create, request: request) { |result|
       render json: result[:redirection], status: :created
