@@ -132,4 +132,54 @@ RSpec.describe RedirectionsController, type: :controller do
       end
     end
   end
+
+  describe 'GET #show' do
+    context 'successful' do
+      it 'when use valid url' do
+        expect {
+          get :show, params: { target_key: redirection.target_key }
+        }.to change(Requisition, :count).by(1)
+
+        expect(response).to redirect_to(redirection.target_url)
+
+        redirection.reload
+
+        expect(redirection.requisition_count).to eq(1)
+      end
+      it 'when redirection have a expire_at valid' do
+        redirection.update!(expire_at: Time.zone.today)
+
+        expect {
+          get :show, params: { target_key: redirection.target_key }
+        }.to change(Requisition, :count).by(1)
+
+        expect(response).to redirect_to(redirection.target_url)
+
+        redirection.reload
+
+        expect(redirection.requisition_count).to eq(1)
+      end
+    end
+
+    context 'failure' do
+      it 'when redirection is expired' do
+        redirection.update!(expire_at: Time.zone.yesterday)
+        pattern = { error: [I18n.t('errors.not_found')] }
+
+        get :show, params: { target_key: redirection.target_key }
+
+        expect(response).to have_http_status(:not_found)
+        expect(response.body).to be_json_as(pattern)
+      end
+
+      it 'when target_key is invalid' do
+        pattern = { error: [I18n.t('errors.not_found')] }
+
+        get :show, params: { target_key: 'invalid' }
+
+        expect(response).to have_http_status(:not_found)
+        expect(response.body).to be_json_as(pattern)
+      end
+    end
+  end
 end
