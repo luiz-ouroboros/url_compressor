@@ -14,4 +14,10 @@ class RedirectionsController < ApplicationController
   def destroy
     process_usecase(::Redirections::Destroy, request: request) { |_result| head :no_content }
   end
+
+  def history
+    process_usecase(::Redirections::History, request: request) { |result|
+      render json: result[:requisitions], status: :ok
+    }
+  end
 end
